@@ -32,9 +32,10 @@ function generateComix(prompt) {
     // Send request to GPT
     // Get response from GPT
     let answer = "";
-    parseAnswer(answer);
-    if (!parseAnswer(answer)) {
+    let parsed = parseAnswer(answer);
+    if (!parsed) {
         console.error("Error parsing answer");
         return false;
     }
+    return parsed;
 }
