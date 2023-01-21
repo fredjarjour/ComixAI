@@ -1,16 +1,27 @@
 <script>
   import placeholder from '$lib/images/imgplaceholder.png'
   import {page} from '$app/stores'
+  // {$page.params.section} to get the value of the url query
 </script>
 
 <div>
   <div class="image_and_text">
     <img src="{placeholder}" alt=""/>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam congue vulputate consequat. Quisque nibh libero, varius efficitur malesuada at, tincidunt nec ipsum. Aliquam finibus quis diam eget tristique. Integer sodales dui at sollicitudin pulvinar. Mauris ut metus tempor est pellentesque consequat. Aliquam in purus a urna congue auctor. Fusce at neque a nisi laoreet porttitor nec et diam. </p>
+    <p>Shrek: It's time to end this! </p>
+  </div>
+
+  <div class="image_and_text flipped">
+    <img src="{placeholder}" alt=""/>
+    <p>Mario: Here I come!</p>
+  </div>
+
+  <div class="image_and_text">
+    <img src="{placeholder}" alt=""/>
+    <p>Shrek: You won't get away that easily!</p>
   </div>
 </div>
 
-<!-- {$page.params.section} -->
+
 
 <style>
   .image_and_text {
@@ -18,5 +29,14 @@
     align-items: center;
     gap: 1rem;
     padding: 1rem;
+  }
+
+  .flipped {
+    flex-direction: row-reverse;  
+  }
+
+  img {
+    width: 10rem;
+    height: auto;
   }
 </style>

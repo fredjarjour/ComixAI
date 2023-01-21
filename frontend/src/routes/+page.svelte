@@ -1,11 +1,19 @@
 <script>
 	import StoryCover from "../components/StoryCover.svelte";
+	import {generateComix} from "$lib/script.js";
+	import {goto} from "$app/navigation";
+	let prompt = "";
+
+	const generate = () => {
+		generateComix(prompt);
+		goto(`/read/${prompt.split(' ').join('_')}/1`);
+	}
 </script>
 
-<form action="">
-	<input type="text" name="prompt" id="prompt" placeholder="Enter a prompt for your story"/>
-	<button type="submit" class="submit">Generate</button>
-</form>
+<div class="prompt">
+	<input type="text" name="prompt" id="prompt" placeholder="Enter a prompt for your story" bind:value={prompt}/>
+	<button class="submit" on:click="{generate}" disabled={!prompt}>Generate</button>
+</div>
 
 <p class="text">
 	Or read existing stories
@@ -19,7 +27,7 @@
 <p class="all"><a href="/read">All stories</a></p>
 
 <style>
-	form {
+	.prompt {
 		display: flex;
 		flex-direction: row;
 		align-items: center;
