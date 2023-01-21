@@ -45,7 +45,6 @@
 	}
 
 	.title {
-		font-family: 'Bangers', cursive;
 		font-size: 5rem;
 		margin-bottom: 0rem;
 	}
