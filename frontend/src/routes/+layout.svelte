@@ -1,5 +1,20 @@
 <script lang="ts">
+  import './app.css'
   import '@picocss/pico'
+	import Header from '../components/Header.svelte';
 </script>
 
-<slot />
+<Header />
+<div class="container">
+  <slot />
+</div>
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+</style>
