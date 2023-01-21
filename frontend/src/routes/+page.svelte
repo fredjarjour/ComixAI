@@ -10,7 +10,7 @@
 	}
 </script>
 
-<h1 class="title">Comix AI</h1>
+<h1 class="title">ComixAI</h1>
 
 <div class="prompt-container">
 	<input type="text" name="prompt" id="prompt" placeholder="Enter a prompt for your story" bind:value={prompt}/>
@@ -24,9 +24,9 @@
 	<p class="all text"><a href="/read">All stories</a></p>
 </div>
 <div class="stories">
-	<StoryCover/>
-	<StoryCover/>
-	<StoryCover/>
+	<StoryCover story=1/>
+	<StoryCover story=1/>
+	<StoryCover story=1/>
 </div>
 
 

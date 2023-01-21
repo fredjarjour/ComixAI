@@ -1,5 +1,5 @@
 <div class="header">
-  <h1 class="title">COMIX AI</h1>
+  <h1 class="title">ComixAI</h1>
 </div>
 
 <style>
