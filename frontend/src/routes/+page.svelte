@@ -10,25 +10,46 @@
 	}
 </script>
 
-<h1>ComixAI</h1>
+<h1 class="title">Comix AI</h1>
 
 <div class="prompt-container">
 	<input type="text" name="prompt" id="prompt" placeholder="Enter a prompt for your story" bind:value={prompt}/>
 	<button class="submit" on:click="{generate}" disabled={!prompt}>Generate</button>
 </div>
 
-<p class="text">
-	Or read existing stories...
-</p>
+<div class="text-container">
+	<p class="text">
+		Or read existing stories...
+	</p>
+	<p class="all text"><a href="/read">All stories</a></p>
+</div>
 <div class="stories">
 	<StoryCover/>
 	<StoryCover/>
 	<StoryCover/>
 </div>
 
-<p class="all"><a href="/read">All stories</a></p>
+
 
 <style>
+	.text-container {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		gap: 0.5rem;
+		width: 100%
+	}
+
+	.text {
+		margin-bottom:0px
+	}
+
+	.title {
+		font-family: 'Bangers', cursive;
+		font-size: 5rem;
+		margin-bottom: 0rem;
+	}
+
 	.prompt-container {
 		width: 100%;
 		display: flex;
@@ -48,10 +69,6 @@
 	.stories {
 		display: flex;
 		gap: 5rem;
-	}
-
-	.text {
-		text-align: center;
 	}
 
 	.all {
