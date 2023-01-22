@@ -83,6 +83,7 @@ app.get('/users', (req, res) => {
 // Create a new comic
 app.post('/comics', async (req, res) => {
   try {
+    console.log(req.body);
     const comic = new Comic(req.body);
     await comic.save();
     res.send(comic);
@@ -125,6 +126,18 @@ app.post('/comics/:comicId/panels', (req, res) => {
       });
     }
   });
+});
+
+// add prompt to comic
+app.post('/comics/:comicId/prompt', async (req, res) => {
+    try {
+      const comic = await Comic.findById(req.params.comicId);
+      comic.comic_prompt = req.body.new_prompt;
+      await comic.save();
+      res.json({ message: 'Prompt sccessfully concatenated!' + comic.comic_prompt });
+    } catch (err) {
+      res.status(500).json({ message: err.message });
+    }
 });
 
 /* app.get('/comics/:comicId/panels', (req, res) => {
