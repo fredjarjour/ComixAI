@@ -1,13 +1,10 @@
+-f https://download.pytorch.org/whl/torch_stable.html
 flask
 flask-cors
 gunicorn
 numpy
-
---extra-index-url https://download.pytorch.org/whl/cu118
-torch
-
---extra-index-url https://download.pytorch.org/whl/cu1168
-torchvision
-
-accelerate
-diffusers[torch]
+diffusers[torch]==0.11.1
+safetensors==0.2.7
+torch==1.13.1+cu117
+transformers==4.25.1
+xformers==0.0.16rc425

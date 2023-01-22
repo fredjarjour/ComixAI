@@ -23,7 +23,7 @@ def status():
 def predict():
     req = request.get_json(silent=True, force=True)
 
-    image = pipe(req["prompt"]).images[0]
+    image = pipe(req["instances"][0]).images[0]
 
     # Convert image to base64
     buffered = BytesIO()
