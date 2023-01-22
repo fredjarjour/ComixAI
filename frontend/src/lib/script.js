@@ -32,7 +32,7 @@ function postToDatabase(comicTitle, comicAuthor, character_descriptions, panels)
         body: JSON.stringify({
             title: comicTitle,
             author: comicAuthor,
-            pages: [
+            panels: [
             {
                 page_number: 1,
                 panel_number: 1,
@@ -112,10 +112,41 @@ function generateComix(prompt) {
         console.error(error);
     });
 
-    let parsed = parseAnswer(callResponse);
+    let id = parseAnswer(callResponse);
     if (!parsed) {
         console.error("Error parsing answer");
         return false;
     }
-    return generateID();
+    return id;
+}
+
+function getComix(id, page) {
+    let comic = "";
+    let title = "";
+    let author = "";
+    let panels = [0,0,0]; // [[image, [dialogue]], ...]
+    let maxPage = 0;
+
+    fetch("http://localhost:3000/comics")
+    .then(res => res.json())
+    .then(comics => {
+        comic = comics.find(comic => comic._id.str === id);
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+    title = comic.title;
+    author = comic.author;
+
+    comic.panels.forEach(panel => {
+        if (panel.page_number > maxPage) {
+            maxPage = panel.page_number;
+        }
+        if (panel.page_number === page) {
+            panels[panel.panel_number - 1] = {image: panel.image, dialogue: panel.dialogue.join("\n")};
+        }
+    });
+
+    return {title, author, panels, isLastPage: maxPage == page}
 }

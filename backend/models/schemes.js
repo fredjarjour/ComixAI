@@ -16,10 +16,10 @@ const userSchema = new mongoose.Schema({
   const comicSchema = new mongoose.Schema({
     title: { type: String, required: true },
     author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-    pages: [{
+    panels: [{
       page_number: { type: Number },
       panel_number: { type: Number },
-      image: [{ type: Buffer }],
+      image: { type: Buffer },
       dialogue: [{ type: String }]
     }],
     created_at: { type: Date, default: Date.now },
