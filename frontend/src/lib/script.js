@@ -51,28 +51,31 @@ function parseExistingAnswer(response, page_number) {
     }
 }
 
-function promptGPT(prompt) {
+async function promptGPT(prompt) {
     let callResponse = '';
     fetch('http://localhost:3000/prompt', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json'
 		},
-		body: JSON.stringify(request+tempRequest+end)
+		body: JSON.stringify({
+            prompt
+        })
 	})
     .then((res) => res.json())
     .then((response) => {
         callResponse = response.bot;
-        console.log(response.bot);
+        console.log("Response: " + response.bot);
     })
     .catch((error) => {
         console.error(error);
     });
-
+    console.log("end of function");
     return callResponse;
 }
 
-function postToDatabase(comicTitle, comicAuthor, character_descriptions, panels, prompt) {
+function postToDatabase(comicTitle, comicAuthor, character_descriptions, comicPanels, prompt) {
+    console.log(comicPanels);
 	let comicID = '';
 	fetch('http://localhost:3000/comics', {
 		method: 'POST',
@@ -83,20 +86,20 @@ function postToDatabase(comicTitle, comicAuthor, character_descriptions, panels,
 				{
 					page_number: 1,
 					panel_number: 1,
-					image: panels[0][0],
-					dialogue: panels[0][1]
+					image: comicPanels[0][0],
+					dialogue: comicPanels[0][1]
 				},
 				{
 					page_number: 1,
 					panel_number: 2,
-					image: panels[1][0],
-					dialogue: panels[1][1]
+					image: comicPanels[1][0],
+					dialogue: comicPanels[1][1]
 				},
 				{
 					page_number: 1,
 					panel_number: 3,
-					image: panels[2][0],
-					dialogue: panels[2][1]
+					image: comicPanels[2][0],
+					dialogue: comicPanels[2][1]
 				}
 			],
 			character_description: character_descriptions,
@@ -104,18 +107,18 @@ function postToDatabase(comicTitle, comicAuthor, character_descriptions, panels,
 		}),
 		headers: { 'Content-Type': 'application/json' }
 	})
-		.then((res) => res.json())
-		.then((comic) => {
-			comicID = comic._id.str;
-			console.log(comic);
-		})
-		.catch((err) => console.error(err));
-	return comicID;
+    .then((res) => res.json())
+    .then((comic) => {
+        comicID = comic._id.str;
+        console.log(comic);
+    })
+    .catch((err) => console.error(err));
+    return comicID;
 }
 
 function generateImage(promptString) {
     let imgBuffer = '';
-
+    /*
 	fetch('.../predict', {
 		method: 'POST',
 		body: JSON.stringify({
@@ -129,7 +132,7 @@ function generateImage(promptString) {
     .catch((error) => {
         console.error(error);
     });
-
+    */
 	return imgBuffer;
 }
 
@@ -149,7 +152,7 @@ function generateComix(prompt) {
 	let callResponse = promptGPT(request+tempRequest+end);
 
 	let id = parseCreateAnswer(callResponse, request+end);
-	if (!parsed) {
+	if (!id) {
 		console.error('Error parsing answer');
 		return false;
 	}
@@ -222,7 +225,15 @@ function getPreviousPrompt(id) {
 function createPage(id, page_number) {
     let prompt = getPreviousPrompt(id);
     let callResponse = promptGPT(prompt + "\nContinue this story with three more panels.");
-    // TODO: Update prompt
+    fetch(`http://localhost:3000/comics/${id}/prompt`, {
+        method: 'POST',
+        body: JSON.stringify({
+            prompt: prompt + callResponse
+        })
+    })
+    .catch((error) => {
+        console.error(error);
+    });
 
     let panels = parseExistingAnswer(callResponse, page_number+1);
 
@@ -237,6 +248,7 @@ function createPage(id, page_number) {
     });
 }
 
+console.log("Response return: " + promptGPT("A dog and a cat fighting over a card game"));
 
 
 export { generateComix, getComix, createPage, getAllComix };
