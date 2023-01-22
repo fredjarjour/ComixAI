@@ -15,7 +15,11 @@
 	}
 </script>
 
-<h1 class="title">ComixAI</h1>
+<svelte:head>
+    <title>ComixAI</title> 
+</svelte:head>
+
+<h1 class="title anim-typewriter">ComixAI</h1>
 
 <p class="description">
 	ComixAI is a web app that uses machine learning to generate comic strips. 
@@ -90,8 +94,13 @@
 
 	.title {
 		font-size: 5rem;
-		margin-bottom: -.7rem;
+		margin-bottom: 0.1rem;
 		margin-top: 80px;
+		position: relative;
+		border-right: 2px solid rgba(255,255,255,.75);
+		text-align: center;
+		white-space: nowrap;
+		overflow: hidden;
 	}
 
 	.prompt-container {
@@ -120,5 +129,18 @@
 
 	.all {
 		margin-left: auto;
+	}
+
+	.anim-typewriter{
+		animation: typewriter 500ms steps(7) 1s 1 normal both,
+		blinkTextCursor 500ms steps(15) infinite normal;
+	}
+	@keyframes typewriter{
+		from{width: 0;}
+		to{width: 40%;}
+	}
+	@keyframes blinkTextCursor{
+		from{border-right-color: rgba(255,255,255,.75);}
+		to{border-right-color: transparent;}
 	}
 </style>

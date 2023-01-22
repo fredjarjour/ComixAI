@@ -8,6 +8,8 @@ const User = require('./models/schemes').User;
 const Comic = require('./models/schemes').Comic;
 const Panel = require('./models/schemes').Panel;
 
+const { stableDiffusion } = require("./stable-diffusion/stable-diffusion");
+
 require('dotenv').config();
 
 const configuration = new Configuration({
@@ -138,6 +140,16 @@ app.post('/comics/:comicId/prompt', async (req, res) => {
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
+});
+
+app.get("/stable-diffusion", async (req, res) => {
+  const prompt = req.body;
+  try {
+      const result = await stableDiffusion(prompt);
+      res.send(result);
+  } catch (err) {
+      res.status(500).send(err);
+  }
 });
 
 /* app.get('/comics/:comicId/panels', (req, res) => {
