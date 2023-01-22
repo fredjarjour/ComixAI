@@ -2,7 +2,7 @@ async function parseCreateAnswer(answer, request) {
 	let title = '';
 	let descriptions = [];
 	let panels = [];
-	
+
 	let panel_number = 1;
 	try {
 		let lines = answer.split('\n');
@@ -60,7 +60,7 @@ async function parseExistingAnswer(response, page_number) {
 
 async function promptGPT(prompt) {
 	let callResponse = '';
-	
+
 	try {
 		const response = await fetch('http://localhost:3000/prompt', {
 			method: 'POST',
@@ -80,7 +80,7 @@ async function promptGPT(prompt) {
 }
 
 async function postToDatabase(comicTitle, character_descriptions, comicPanels, prompt) {
-	console.log(comicPanels);
+	console.log(comicPanels[0].image);
 	let comicID = '';
 	try {
 		const res = await fetch('http://localhost:3000/comics', {
@@ -92,19 +92,19 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 						page_number: 1,
 						panel_number: 1,
 						dialogue: comicPanels[0].dialogue,
-						image: comicPanels[0].image						
+						image: comicPanels[0].image
 					},
 					{
 						page_number: 1,
 						panel_number: 2,
 						dialogue: comicPanels[1].dialogue,
-						image: comicPanels[1].image						
+						image: comicPanels[1].image
 					},
 					{
 						page_number: 1,
 						panel_number: 3,
 						dialogue: comicPanels[2].dialogue,
-						image: comicPanels[2].image						
+						image: comicPanels[2].image
 					}
 				],
 				character_description: character_descriptions,
@@ -123,8 +123,8 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 async function generateImage(prompt) {
 	let imgB64 = '';
 	console.log(prompt);
-    try {
-        const response = await fetch('http://localhost:3000/stable-diffusion', {
+	try {
+		const response = await fetch('http://localhost:3000/stable-diffusion', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -134,10 +134,10 @@ async function generateImage(prompt) {
 			})
 		});
 		imgB64 = response.text();
-    } catch (error) {
-        console.error(error);
+	} catch (error) {
+		console.error(error);
 		return false;
-    }
+	}
 
 	return imgB64;
 }
@@ -158,7 +158,7 @@ async function generateComix(prompt) {
 	let callResponse = await promptGPT(request + tempRequest + end);
 
 	let id = await parseCreateAnswer(callResponse, request + end);
-	console.log("ID: " + id);
+	console.log('ID: ' + id);
 	if (!id) {
 		console.error('Error parsing answer');
 		return false;
@@ -185,6 +185,7 @@ async function getComix(id, page) {
 	author = comic.author;
 
 	comic.panels.forEach(async (panel) => {
+		console.log(panel);
 		if (panel.page_number > maxPage) {
 			maxPage = panel.page_number;
 		}
@@ -218,7 +219,7 @@ async function getPreviousPrompt(id) {
 	try {
 		const res = await fetch('http://localhost:3000/comics');
 		const comics = await res.json();
-		comic = comics.find((comic) => comic._id.str === id);
+		comic = comics.find((comic) => comic._id == id);
 	} catch (error) {
 		console.error(error);
 	}
@@ -230,7 +231,7 @@ async function getPreviousPrompt(id) {
 
 async function createPage(id, page_number) {
 	let prompt = await getPreviousPrompt(id);
-	let callResponse = promptGPT(prompt + '\nContinue this story with three more panels.');
+	let callResponse = await promptGPT(prompt + '\nContinue this story with three more panels.');
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/prompt`, {
 			method: 'POST',
@@ -242,7 +243,7 @@ async function createPage(id, page_number) {
 		console.error(error);
 	}
 
-	let panels = parseExistingAnswer(callResponse, page_number + 1);
+	let panels = await parseExistingAnswer(callResponse, page_number + 1);
 
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/panels`, {
