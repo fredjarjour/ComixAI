@@ -247,14 +247,14 @@ async function createPage(id, page_number) {
 		return false;
 	}
 
-	let panels = await parseExistingAnswer(callResponse, page_number + 1);
-
+	let panels = await parseExistingAnswer(callResponse, parseInt(page_number) + 1);
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/panels`, {
 			method: 'POST',
-			body: JSON.stringify({
-				panels
-			})
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(panels)
 		});
 	} catch (error) {
 		console.error(error);
