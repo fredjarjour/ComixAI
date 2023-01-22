@@ -3,6 +3,7 @@ const cors = require('cors');
 const { Configuration, OpenAIApi } = require('openai');
 const mongoose = require('mongoose');
 const app = express();
+app.use(express.json({ limit: '10000000' }));
 
 // import request
 const request = require('request');
@@ -11,39 +12,43 @@ const User = require('./models/schemes').User;
 const Comic = require('./models/schemes').Comic;
 const Panel = require('./models/schemes').Panel;
 
-const { stableDiffusion } = require("./stable-diffusion/stable-diffusion");
+const { stableDiffusion } = require('./stable-diffusion/stable-diffusion');
 
 require('dotenv').config();
 
 const configuration = new Configuration({
   organization: 'org-DrkO8FCiScMVM7ofmp3FvXvf',
-  apiKey: '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'
+  apiKey: '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',
 });
 const openai = new OpenAIApi(configuration);
 
-const MONG_URI = 'mongodb+srv://comixai:conuhacks@comixai.qoef9rk.mongodb.net/?retryWrites=true&w=majority';
-mongoose.connect(MONG_URI)
+const MONG_URI =
+  'mongodb+srv://comixai:conuhacks@comixai.qoef9rk.mongodb.net/?retryWrites=true&w=majority';
+mongoose
+  .connect(MONG_URI)
   .then(() => {
-    app.listen(3000, () => console.log('connected to db & listening on port 3000'));
+    app.listen(3000, () =>
+      console.log('connected to db & listening on port 3000')
+    );
     console.log('MongoDB Connected...');
   })
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
-app.use(cors())
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.status(200).send({
-    message: 'Hello!'
-  })
-})
+    message: 'Hello!',
+  });
+});
 
 app.post('/prompt', async (req, res) => {
   try {
     const prompt = req.body.prompt;
 
     const response = await openai.createCompletion({
-      model: "text-davinci-003",
+      model: 'text-davinci-003',
       prompt: `${prompt}`,
       temperature: 0.7,
       max_tokens: 3000,
@@ -53,14 +58,13 @@ app.post('/prompt', async (req, res) => {
     });
 
     res.status(200).send({
-      bot: response.data.choices[0].text
+      bot: response.data.choices[0].text,
     });
-
   } catch (error) {
-    console.error(error)
+    console.error(error);
     res.status(500).send(error || 'Something went wrong');
   }
-})
+});
 
 // Create a new user
 app.post('/users', async (req, res) => {
@@ -69,8 +73,8 @@ app.post('/users', async (req, res) => {
   try {
     const newUser = await User.create({ username, email, password });
     res.status(200).send(newUser);
-  } catch(err) {
-    res.status
+  } catch (err) {
+    res.status;
   }
 });
 
@@ -116,8 +120,8 @@ app.post('/comics/:comicId/panels', (req, res) => {
     if (err) {
       res.send(err);
     } else {
-      const panels = (req.body);
-      panels.forEach(panel => {
+      const panels = req.body;
+      panels.forEach((panel) => {
         const newPanel = new Panel(panel);
         comic.panels.push(newPanel);
       });
@@ -135,14 +139,16 @@ app.post('/comics/:comicId/panels', (req, res) => {
 
 // add prompt to comic
 app.post('/comics/:comicId/prompt', async (req, res) => {
-    try {
-      const comic = await Comic.findById(req.params.comicId);
-      comic.comic_prompt = req.body.new_prompt;
-      await comic.save();
-      res.json({ message: 'Prompt successfully concatenated!: ' + comic.comic_prompt });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
+  try {
+    const comic = await Comic.findById(req.params.comicId);
+    comic.comic_prompt = req.body.new_prompt;
+    await comic.save();
+    res.json({
+      message: 'Prompt successfully concatenated!: ' + comic.comic_prompt,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 app.post('/stable-diffusion', async (req, res) => {
@@ -151,7 +157,7 @@ app.post('/stable-diffusion', async (req, res) => {
     url: 'http://184.162.109.79:4230/predict',
     headers: { 'content-type': 'application/json' },
     body: req.body,
-    json: true
+    json: true,
   };
 
   request(options, (error, response, body) => {

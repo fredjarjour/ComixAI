@@ -32,10 +32,9 @@
 <div class="container">
     <h1>{section.title}</h1>
     <h2>by {section.author}</h2>
-    {#each section.panels as panel}
-      
+    {#each section.panels as panel} 
       <div class="image_and_text">
-        <img src="data:image/jpg;base64,${panel.image}" alt=""/>
+        <img src="data:image/png;base64,{panel.image.substring(1,panel.image.length - 1)}" alt=""/>
         <p>{panel.dialogue}</p>
       </div>
     {/each}
