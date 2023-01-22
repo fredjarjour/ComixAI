@@ -8,7 +8,7 @@
 </script>
 
 <article class="container" on:click={() => goto(`/read/${storyId}/1`)}>
-  <img src="{image}" alt="">
+  <img src="{imageSrc}" alt="">
   <div class="title">
     <p>{storyTitle}</p>
     <p>{storyAuthor}</p>

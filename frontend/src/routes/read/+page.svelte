@@ -1,12 +1,20 @@
 <script>
   import StoryCover from "../../components/StoryCover.svelte";
-  let stories = [1,2,3,4,5,6,7,8,9,10,11]
+  import {getAllComix} from "$lib/script.js";
+
+  const loadAllStories = async () => {
+		let comics = await getAllComix();
+	}
 </script>
 
 <div class="container">
-  {#each stories as story}
-    <StoryCover story={story}/>
-  {/each}
+  {#await loadAllStories()}
+    <div aria-busy="true"></div>
+  {:then stories}
+    {#each stories as story}
+      <StoryCover storyId={story._id} storyTitle={story.title} storyAuthor={story.author.username} imageSrc="data:image/jpg;base64,${story.panels[0].image}" />
+    {/each}
+  {/await}
 </div>
 
 <style>
