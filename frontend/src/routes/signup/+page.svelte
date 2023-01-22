@@ -1,25 +1,26 @@
 <main class="container">
-<article class="grid">
-    <div>
-      <hgroup>
-        <h1>Sign up</h1>
-        <h2>Join us now!</h2>
-      </hgroup>
-      <form>
-        <input type="text" name="signup" placeholder="User" aria-label="Login" autocomplete="nickname" required>
-        <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password" required>
-        <!-- <fieldset>
-          <label for="remember">
-            <input type="checkbox" role="switch" id="remember" name="remember">
-            Remember me
-          </label>
-        </fieldset> -->
-        <button type="submit" class="contrast" onclick="event.preventDefault()">Sign up</button>
-      </form>
-    </div>
-    <div></div>
-  </article>
-</main>
+  <article class="grid">
+      <div>
+        <hgroup>
+          <h1>Sign up</h1>
+          <h2>Join us now!</h2>
+        </hgroup>
+        <form>
+          <input type="text" name="signup" placeholder="User" aria-label="Login" autocomplete="nickname" required>
+          <input type="password" name="password" placeholder="Password" aria-label="Password" autocomplete="current-password" required>
+          <input type="email" name="email" placeholder="Email" aria-label="Email" autocomplete="current-email" required>
+          <!-- <fieldset>
+            <label for="remember">
+              <input type="checkbox" role="switch" id="remember" name="remember">
+              Remember me
+            </label>
+          </fieldset> -->
+          <button type="submit" class="contrast" onclick="event.preventDefault()">Sign up</button>
+        </form>
+      </div>
+      <div></div>
+    </article>
+  </main>
 
 <style>
 main {

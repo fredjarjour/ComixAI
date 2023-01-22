@@ -2,7 +2,7 @@
 <article class="grid">
     <div>
       <hgroup>
-        <h1>Sign in</h1>
+        <h1>Log in</h1>
         <h2>Welcome back!</h2>
       </hgroup>
       <form>
