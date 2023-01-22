@@ -108,11 +108,7 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 					}
 				],
 				character_description: character_descriptions,
-<<<<<<< HEAD
 				comic_prompt: prompt
-=======
-				prompt
->>>>>>> b06dad421e3b47e49785b447ea0dfee22804171d
 			}),
 			headers: { 'Content-Type': 'application/json' }
 		});
@@ -229,26 +225,16 @@ async function getPreviousPrompt(id) {
 		return false;
 	}
 
-<<<<<<< HEAD
 	console.log('COMIC PROMPT PREVIOUS: ' + JSON.stringify(comic, 'comic_prompt'));
-=======
-	console.log("COMIC PROMPT PREVIOUS: " + JSON.stringify(comic, "comic_prompt"));
->>>>>>> b06dad421e3b47e49785b447ea0dfee22804171d
 
 	return comic.comic_prompt;
 }
 
 async function createPage(id, page_number) {
 	let prompt = await getPreviousPrompt(id);
-<<<<<<< HEAD
 	console.log('GPT PROMPTED WITH ' + prompt);
 	let callResponse = await promptGPT(prompt + '\nContinue this story with three more panels.');
 	console.log('NEW PROMPT' + callResponse);
-=======
-	console.log("GPT PROMPTED WITH " + prompt);
-	let callResponse = await promptGPT(prompt + '\nContinue this story with three more panels.');
-	console.log("NEW PROMPT" + callResponse);
->>>>>>> b06dad421e3b47e49785b447ea0dfee22804171d
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/prompt`, {
 			method: 'POST',
@@ -261,12 +247,7 @@ async function createPage(id, page_number) {
 		return false;
 	}
 
-<<<<<<< HEAD
 	let panels = await parseExistingAnswer(callResponse, parseInt(page_number) + 1);
-=======
-	let panels = await parseExistingAnswer(callResponse, page_number + 1);
-
->>>>>>> b06dad421e3b47e49785b447ea0dfee22804171d
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/panels`, {
 			method: 'POST',
