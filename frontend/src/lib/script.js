@@ -254,3 +254,6 @@ async function createPage(id, page_number) {
 }
 
 export { generateComix, getComix, createPage, getAllComix };
+
+
+console.log(await generateImage("a dog"));
