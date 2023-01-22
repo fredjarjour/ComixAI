@@ -2,9 +2,7 @@
   import StoryCover from "../../components/StoryCover.svelte";
   import {getAllComix} from "$lib/script.js";
 
-  const loadAllStories = async () => {
-		let comics = await getAllComix();
-	}
+  const loadAllStories = async () => await getAllComix();
 </script>
 
 <div class="container">
