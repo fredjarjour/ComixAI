@@ -1,12 +1,15 @@
-FROM anibali/pytorch:1.13.0-cuda11.8-ubuntu22.04
+FROM python:3.10-slim-bullseye
+
+RUN rm -rf /usr/local/cuda/lib64/stubs
 
 # Install libraries
 COPY ./requirements.txt ./
-RUN pip install -r requirements.txt && \
-    rm ./requirements.txt
+RUN pip install -r requirements.txt
 
 # Setup container directories
 # RUN mkdir /app
+
+ENV USE_TORCH=1
 
 # Copy local code to the container
 COPY ./app /app
