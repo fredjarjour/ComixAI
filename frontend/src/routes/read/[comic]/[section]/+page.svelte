@@ -3,6 +3,7 @@
   import {page} from '$app/stores'
   import {goto} from '$app/navigation'
   import {getComix, createPage} from '$lib/script.js'
+  let loading = false;
   // {$page.params.section} to get the value of the url query
 
   let loadSection = async () => {
@@ -20,11 +21,15 @@
   }
 
   let generateNewPage = async () => {
+    loading = true;
     await createPage($page.params.comic, $page.params.section);
     goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`);
   }
 </script>
 
+<div class="loading" class:hidden="{!loading}">
+	<span class="loader"></span>
+</div>
 
 {#await loadSection()}
 <div aria-busy="true"></div>
@@ -52,6 +57,58 @@
   {/await}
 
 <style>
+  	.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  animation: pulse 1s linear infinite;
+}
+.loader:after {
+  content: '';
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: scaleUp 1s linear infinite;
+}
+
+@keyframes scaleUp {
+  0% { transform: translate(-50%, -50%) scale(0) }
+  60% , 100% { transform: translate(-50%, -50%)  scale(1)}
+}
+@keyframes pulse {
+  0% , 60% , 100%{ transform:  scale(1) }
+  80% { transform:  scale(1.2)}
+}
+	.hidden {
+		display: none !important;
+	}
+
+	.loading {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		font-size: 2rem;
+		background-color: #777;
+		opacity: 0.5;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
+
+
   @keyframes pop-into-existence {
 		0% {
 			transform: scale(0);
@@ -60,11 +117,6 @@
 			transform: scale(1);
 		}
 	}
-
-
-  .hidden {
-    display: none;
-  }
 
   .pager {
     display: flex;
