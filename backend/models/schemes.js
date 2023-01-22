@@ -6,7 +6,7 @@ const Schema = mongoose.Schema;
 const panelSchema = new mongoose.Schema({
   page_number: { type: Number },
   panel_number: { type: Number },
-  image: { type: Buffer },
+  image: { data: String },
   dialogue: [{ type: String }]
 });
 
