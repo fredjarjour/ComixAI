@@ -11,7 +11,11 @@
 
 <div class="container">
     {#each stories as story}
-      <StoryCover storyId={story._id} storyTitle={story.title} storyAuthor="Anonymous" imageSrc="data:image/jpg;base64,${story.panels[0].image}" />
+      {#if story.panels[0].image}
+      <StoryCover storyId={story._id} storyTitle={story.title} imageSrc="data:image/jpg;base64,{story.panels[0].image.substring(1, story.panels[0].image.length -1)}" />
+      {:else}
+      <StoryCover storyId={story._id} storyTitle={story.title} imageSrc="" />
+      {/if}
     {/each}
 </div>
 {/await}

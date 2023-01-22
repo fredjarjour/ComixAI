@@ -3,7 +3,6 @@
   import {goto} from '$app/navigation';
   export let storyId;
   export let storyTitle;
-  export let storyAuthor;
   export let imageSrc;
 </script>
 
@@ -11,7 +10,6 @@
   <img src="{imageSrc}" alt="">
   <div class="title">
     <p>{storyTitle}</p>
-    <p>{storyAuthor}</p>
   </div>
 </article>
 
