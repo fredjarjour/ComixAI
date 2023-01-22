@@ -23,6 +23,7 @@
     await createPage($page.params.comic, $page.params.section);
     goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`);
   }
+  let flip = false;
 </script>
 
 <div class="loading" class:hidden="{!loading}">
@@ -35,8 +36,8 @@
 <div class="container">
     <h1>{section.title}</h1>
     <h2>by {section.author}</h2>
-    {#each section.panels as panel} 
-      <div class="image_and_text">
+    {#each section.panels as panel, i} 
+      <div class="image_and_text {i===1? "flipped" : "normal"}">
         <img src="data:image/png;base64,{panel.image.substring(1,panel.image.length - 1)}" alt=""/>
         <p>{panel.dialogue}</p>
       </div>
@@ -55,6 +56,10 @@
   {/await}
 
 <style>
+  .flipped  {
+    flex-direction: row-reverse;
+  }
+
   	.loader {
   width: 48px;
   height: 48px;
