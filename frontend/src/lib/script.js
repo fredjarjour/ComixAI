@@ -4,16 +4,22 @@ async function parseCreateAnswer(answer, request) {
 	let panels = [];
 	try {
 		let lines = answer.split('\n');
-		lines.forEach((line) => {
+		lines.forEach(async (line) => {
 			if (line.startsWith('Panel ')) {
 				let panelDescription = line.split(': ').slice(1).join(': ');
-				panels.push([generateImage(panelDescription), []]);
+                panels.push({
+					page_number: page_number,
+					panel_number: panel_number,
+					image: await generateImage(panelDescription),
+					dialogue: []
+				});
+				panel_number++;
 			} else if (line.startsWith('DESCRIPTION: ')) {
 				descriptions.push(line.substring(13));
 			} else if (line.startsWith('TITLE: ')) {
 				title = line.substring(7);
 			} else if (line.includes(': ')) {
-				panels[panels.length - 1][1].push(line);
+				panels[panels.length - 1].dialogue.push(line);
 			}
 		});
 		let id = await postToDatabase(title, descriptions, panels, request + '\n' + answer);
@@ -112,8 +118,8 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 }
 
 async function generateImage(promptString) {
-	let imgBuffer = '';
-	/*
+	let imgB64 = '';
+
     try {
         const predictions = await fetch('.../predict', {
             method: 'POST',
@@ -122,12 +128,12 @@ async function generateImage(promptString) {
             })
         });
         const predictionsDict = await predictions.json();
-        imgBuffer = predictionsDict.predictions[0];
+        imgB64 = predictionsDict.predictions[0];
     } catch (error) {
         console.error(error);
     }
-    */
-	return imgBuffer;
+
+	return imgB64;
 }
 
 async function generateComix(prompt) {
@@ -172,13 +178,13 @@ async function getComix(id, page) {
 	title = comic.title;
 	author = comic.author;
 
-	comic.panels.forEach((panel) => {
+	comic.panels.forEach(async (panel) => {
 		if (panel.page_number > maxPage) {
 			maxPage = panel.page_number;
 		}
 		if (panel.page_number == page) {
 			panels[panel.panel_number - 1] = {
-				image: Buffer.from(panel.image).toString('base64'),
+				image: panel.image,
 				dialogue: panel.dialogue.join('\n')
 			};
 		}
