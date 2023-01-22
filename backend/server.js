@@ -121,6 +121,7 @@ app.post('/comics/:comicId/panels', (req, res) => {
       res.send(err);
     } else {
       const panels = req.body;
+      console.log(panels);
       panels.forEach((panel) => {
         const newPanel = new Panel(panel);
         comic.panels.push(newPanel);

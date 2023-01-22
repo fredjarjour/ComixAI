@@ -219,7 +219,7 @@ async function getPreviousPrompt(id) {
 	try {
 		const res = await fetch('http://localhost:3000/comics');
 		const comics = await res.json();
-		comic = comics.find((comic) => comic._id.str === id);
+		comic = comics.find((comic) => comic._id == id);
 	} catch (error) {
 		console.error(error);
 	}
@@ -231,7 +231,7 @@ async function getPreviousPrompt(id) {
 
 async function createPage(id, page_number) {
 	let prompt = await getPreviousPrompt(id);
-	let callResponse = promptGPT(prompt + '\nContinue this story with three more panels.');
+	let callResponse = await promptGPT(prompt + '\nContinue this story with three more panels.');
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/prompt`, {
 			method: 'POST',
@@ -243,7 +243,7 @@ async function createPage(id, page_number) {
 		console.error(error);
 	}
 
-	let panels = parseExistingAnswer(callResponse, page_number + 1);
+	let panels = await parseExistingAnswer(callResponse, page_number + 1);
 
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/panels`, {
