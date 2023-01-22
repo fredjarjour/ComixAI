@@ -23,6 +23,7 @@ async function stableDiffusion(prompt, img_base64="") {
         }
         
         if (executable == "") reject("Python is not installed");
+        console.log(executable)
 
         const pythonProcess = spawn(executable, img_base64 == "" ? [__dirname + "/main.py", prompt] : [__dirname + "/main.py", prompt, img_base64]);
         pythonProcess.stdout.on('data', (data) => {

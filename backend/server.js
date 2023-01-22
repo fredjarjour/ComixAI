@@ -4,6 +4,9 @@ const { Configuration, OpenAIApi } = require('openai');
 const mongoose = require('mongoose');
 const app = express();
 
+// import request
+const request = require('request');
+
 const User = require('./models/schemes').User;
 const Comic = require('./models/schemes').Comic;
 const Panel = require('./models/schemes').Panel;
@@ -142,14 +145,19 @@ app.post('/comics/:comicId/prompt', async (req, res) => {
     }
 });
 
-app.post("/stable-diffusion", async (req, res) => {
-  const prompt = req.body.prompt;
-  try {
-      const result = await stableDiffusion(prompt);
-      res.send(result);
-  } catch (err) {
-      res.status(500).send(err);
-  }
+app.post('/stable-diffusion', async (req, res) => {
+  const options = {
+    method: 'POST',
+    url: 'http://184.162.109.79:4230/predict',
+    headers: { 'content-type': 'application/json' },
+    body: req.body,
+    json: true
+  };
+
+  request(options, (error, response, body) => {
+    if (error) throw new Error(error);
+    res.json(body);
+  });
 });
 
 /* app.get('/comics/:comicId/panels', (req, res) => {
