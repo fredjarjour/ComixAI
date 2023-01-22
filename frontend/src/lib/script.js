@@ -124,7 +124,7 @@ function getComix(id, page) {
 	let comic = '';
 	let title = '';
 	let author = '';
-	let panels = [0, 0, 0]; // [[image, [dialogue]], ...]
+	let panels = [0, 0, 0];
 	let maxPage = 0;
 
 	fetch('http://localhost:3000/comics')
@@ -137,18 +137,20 @@ function getComix(id, page) {
 		});
 
 	title = comic.title;
-	author = comic.author;
+	author = comic.author.username;
 
 	comic.panels.forEach((panel) => {
 		if (panel.page_number > maxPage) {
 			maxPage = panel.page_number;
 		}
 		if (panel.page_number === page) {
-			panels[panel.panel_number - 1] = { image: panel.image, dialogue: panel.dialogue.join('\n') };
+			panels[panel.panel_number - 1] = { image: Buffer.from(panel.image).toString("base64"), dialogue: panel.dialogue.join('\n') };
 		}
 	});
 
 	return { title, author, panels, isLastPage: maxPage == page };
 }
+
+
 
 export { generateComix, getComix };
