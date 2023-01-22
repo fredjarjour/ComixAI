@@ -17,6 +17,12 @@
 
 <h1 class="title">ComixAI</h1>
 
+<p class="description">
+	ComixAI is a web app that uses machine learning to generate comic strips. 
+	<br>
+	Enter a prompt below to generate a comic strip, or read existing stories.
+</p>
+
 <div class="prompt-container">
 	<input type="text" name="prompt" id="prompt" placeholder="Enter a prompt for your story" bind:value={prompt}/>
 	<button class="submit" on:click="{generate}" disabled={!prompt}>Generate</button>
@@ -38,8 +44,6 @@
 	{/await}
 
 </div>
-
-
 
 <style>
 
@@ -68,8 +72,17 @@
 		flex-direction: row;
 		align-items: center;
 		gap: 0.5rem;
+		margin-top: 20px;
 		width: 100%;
 		animation: pop-into-existence 1s;
+	}
+
+	.description {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		color: #777;
+		margin-bottom: 20px;
 	}
 
 	.text {
@@ -78,14 +91,16 @@
 
 	.title {
 		font-size: 5rem;
-		margin-bottom: 0rem;
+		margin-bottom: -.7rem;
+		margin-top: 80px;
 	}
 
 	.prompt-container {
-		width: 100%;
+		width: 70%;
 		display: flex;
 		flex-direction: row;
 		align-items: center;
+		height: 80%;
 		gap: 0.5rem;
 		animation: slide-up 1s;
 	}
