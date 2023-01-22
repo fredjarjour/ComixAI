@@ -35,7 +35,6 @@
 {:then section}
 <div class="container">
     <h1>{section.title}</h1>
-    <h2>by {section.author}</h2>
     {#each section.panels as panel, i} 
       <div class="image_and_text {i===1? "flipped" : "normal"}">
         <img src="data:image/png;base64,{panel.image.substring(1,panel.image.length - 1)}" alt=""/>
