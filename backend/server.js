@@ -34,8 +34,8 @@ mongoose
   })
   .catch((err) => console.log(err));
 
-app.use(cors());
-app.use(express.json());
+app.use(cors())
+app.use(express.json({ limit: '10000000' }));
 
 app.get('/', (req, res) => {
   res.status(200).send({
@@ -92,8 +92,14 @@ app.get('/users', (req, res) => {
 // Create a new comic
 app.post('/comics', async (req, res) => {
   try {
-    console.log(req.body);
     const comic = new Comic(req.body);
+
+    const panels = req.body.panels;
+    panels.forEach(panel => {
+      panel.image = Buffer.from(panel.image, 'base64');
+    });
+    comic.panels = panels;
+
     await comic.save();
     res.send(comic);
   } catch (err) {
@@ -109,6 +115,11 @@ app.get('/comics', (req, res) => {
       if (err) {
         res.send(err);
       } else {
+        comics.forEach(comic => {
+          comic.panels.forEach(panel => {
+            panel.image = panel.image.toString('base64');
+          });
+        });
         res.json(comics);
       }
     });
@@ -163,7 +174,7 @@ app.post('/stable-diffusion', async (req, res) => {
 
   request(options, (error, response, body) => {
     if (error) throw new Error(error);
-    res.json(body);
+    res.send(body);
   });
 });
 
