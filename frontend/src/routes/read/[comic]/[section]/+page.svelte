@@ -45,6 +45,7 @@
       <button class="pager-button" on:click={generateNewPage} class:hidden="{!section.isLastPage}">Generate Next Page</button>
     </div>
   {:catch error}
+    {console.log(error)}
     <p>{error.message}</p>
   {/await}
 </div>
