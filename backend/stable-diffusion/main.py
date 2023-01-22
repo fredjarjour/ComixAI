@@ -32,7 +32,8 @@ if len(sys.argv) <= 2:
                     # Defaults to 7.0 if not specified.
         width=512, # Generation width, defaults to 512 if not included.
         height=512, # Generation height, defaults to 512 if not included.
-        sampler=generation.SAMPLER_K_DPMPP_2M # Choose which sampler we want to denoise our generation with.
+        guidance_preset=generation.GUIDANCE_PRESET_FAST_GREEN,
+        sampler=generation.SAMPLER_K_DPMPP_2S_ANCESTRAL # Choose which sampler we want to denoise our generation with.
                                                     # Defaults to k_dpmpp_2m if not specified. Clip Guidance only supports ancestral samplers.
                                                     # (Available Samplers: ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_dpmpp_2s_ancestral, k_lms, k_dpmpp_2m)
     )
@@ -65,7 +66,8 @@ else:
                     # Defaults to 7.0 if not specified.
         width=512, # Generation width, defaults to 512 if not included.
         height=512, # Generation height, defaults to 512 if not included.
-        sampler=generation.SAMPLER_K_DPMPP_2M # Choose which sampler we want to denoise our generation with.
+        guidance_preset=generation.GUIDANCE_PRESET_FAST_GREEN,
+        sampler=generation.SAMPLER_K_DPMPP_2S_ANCESTRAL # Choose which sampler we want to denoise our generation with.
                                                     # Defaults to k_dpmpp_2m if not specified. Clip Guidance only supports ancestral samplers.
                                                     # (Available Samplers: ddim, plms, k_euler, k_euler_ancestral, k_heun, k_dpm_2, k_dpm_2_ancestral, k_dpmpp_2s_ancestral, k_lms, k_dpmpp_2m)
     )
