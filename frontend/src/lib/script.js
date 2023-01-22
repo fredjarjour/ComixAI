@@ -53,26 +53,26 @@ function parseExistingAnswer(response, page_number) {
 
 async function promptGPT(prompt) {
     let callResponse = '';
-    fetch('http://localhost:3000/prompt', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify({
-            prompt
-        })
-	})
-    .then((res) => res.json())
-    .then((response) => {
-        callResponse = response.bot;
-        console.log("Response: " + response.bot);
-    })
-    .catch((error) => {
+    try {
+        const response = await fetch('http://localhost:3000/prompt', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                prompt
+            })
+        });
+        const jsonResponse = await response.json();
+        callResponse = jsonResponse.bot;
+        console.log("Response: " + jsonResponse.bot);
+    } catch (error) {
         console.error(error);
-    });
+    }
     console.log("end of function");
     return callResponse;
 }
+
 
 function postToDatabase(comicTitle, comicAuthor, character_descriptions, comicPanels, prompt) {
     console.log(comicPanels);
@@ -116,7 +116,7 @@ function postToDatabase(comicTitle, comicAuthor, character_descriptions, comicPa
     return comicID;
 }
 
-function generateImage(promptString) {
+function generateImage(_promptString) {
     let imgBuffer = '';
     /*
 	fetch('.../predict', {
@@ -136,7 +136,7 @@ function generateImage(promptString) {
 	return imgBuffer;
 }
 
-function generateComix(prompt) {
+async function generateComix(prompt) {
 	let request = `Write a comic about ${prompt}. Include a separate description of what the corresponding panel would look like. Follow this format:
     Panel: [Visual description of panel]
     [Name of character]: [Dialogue spoken by character]
@@ -149,7 +149,7 @@ function generateComix(prompt) {
     DESCRIPTION: [Name of character], [physical description]
     `
     let end = "Generate three panels at a time.";
-	let callResponse = promptGPT(request+tempRequest+end);
+	let callResponse =  await promptGPT(request+tempRequest+end);
 
 	let id = parseCreateAnswer(callResponse, request+end);
 	if (!id) {
@@ -248,7 +248,4 @@ function createPage(id, page_number) {
     });
 }
 
-console.log("Response return: " + promptGPT("A dog and a cat fighting over a card game"));
-
-
-export { generateComix, getComix, createPage, getAllComix };
+console.log("Response return: " + generateComix("a dog"));
