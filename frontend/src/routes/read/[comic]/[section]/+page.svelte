@@ -2,7 +2,7 @@
   import placeholder from '$lib/images/imgplaceholder.png'
   import {page} from '$app/stores'
   import {goto} from '$app/navigation'
-  import {getComix} from '$lib/script.js'
+  import {getComix, createPage} from '$lib/script.js'
   // {$page.params.section} to get the value of the url query
 
   let loadSection = async () => {
@@ -20,10 +20,8 @@
   }
 
   let generateNewPage = async () => {
-    let response = await getComix($page.params.comic, parseInt($page.params.section) + 1);
-    if (response.isLastPage) {
-      goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`)
-    }
+    await createPage($page.params.comic);
+    goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`);
   }
 </script>
 
