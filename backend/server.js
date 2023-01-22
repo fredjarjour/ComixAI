@@ -142,7 +142,7 @@ app.post('/comics/:comicId/panels', (req, res) => {
 app.post('/comics/:comicId/prompt', async (req, res) => {
   try {
     const comic = await Comic.findById(req.params.comicId);
-    comic.comic_prompt = req.body.new_prompt;
+    comic.comic_prompt = req.body.prompt;
     await comic.save();
     res.json({
       message: 'Prompt successfully concatenated!: ' + comic.comic_prompt,
