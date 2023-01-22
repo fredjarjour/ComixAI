@@ -21,6 +21,7 @@
     <title>ComixAI</title> 
 </svelte:head>
 
+
 <div class="loading" class:hidden="{!loading}">
 	<span class="loader"></span>
 </div>

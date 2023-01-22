@@ -8,6 +8,10 @@
   <!-- <link href="https://fonts.googleapis.com/css?family=Bangers" rel="stylesheet"> -->
 </svelte:head>
 
+<div style="display: flex; flex-direction: row-reverse; margin-right: 0; margin-left: auto; margin-top: 15px;">
+	<a href="signup" role="button" class="secondary" style="margin-right: 15px;">Sign Up</a>
+	<a href="login" role="button" class="contrast" style="margin-right: 15px;">Log In</a>
+</div>
 
 <div class="container">
   <slot />
@@ -21,4 +25,14 @@
     gap: 1rem;
     padding: 1rem;
   }
+
+  @keyframes slide-in {
+    from {
+      transform: translateX(300%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+
 </style>
