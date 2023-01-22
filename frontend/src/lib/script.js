@@ -10,7 +10,7 @@ async function parseCreateAnswer(answer, request) {
                 panels.push({
 					page_number: page_number,
 					panel_number: panel_number,
-					image: await bufferToBase64(await generateImage(panelDescription)),
+					image: await generateImage(panelDescription),
 					dialogue: []
 				});
 				panel_number++;
@@ -41,7 +41,7 @@ async function parseExistingAnswer(response, page_number) {
 				panels.push({
 					page_number: page_number,
 					panel_number: panel_number,
-					image: await bufferToBase64(await generateImage(panelDescription)),
+					image: await generateImage(panelDescription),
 					dialogue: []
 				});
 				panel_number++;
@@ -118,7 +118,7 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 }
 
 async function generateImage(promptString) {
-	let imgBuffer = '';
+	let imgB64 = '';
 
     try {
         const predictions = await fetch('.../predict', {
@@ -128,21 +128,12 @@ async function generateImage(promptString) {
             })
         });
         const predictionsDict = await predictions.json();
-        imgBuffer = predictionsDict.predictions[0];
+        imgB64 = predictionsDict.predictions[0];
     } catch (error) {
         console.error(error);
     }
 
-	return imgBuffer;
-}
-
-async function bufferToBase64(buffer) {
-    let binary = '';
-    let bytes = [].slice.call(new Uint8Array(buffer));
-
-    bytes.forEach((b) => (binary += String.fromCharCode(b)));
-
-    return window.btoa(binary);
+	return imgB64;
 }
 
 async function generateComix(prompt) {
@@ -193,7 +184,7 @@ async function getComix(id, page) {
 		}
 		if (panel.page_number == page) {
 			panels[panel.panel_number - 1] = {
-				image: await bufferToBase64(panel.image),
+				image: panel.image,
 				dialogue: panel.dialogue.join('\n')
 			};
 		}
