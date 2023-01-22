@@ -2,12 +2,21 @@
   import placeholder from '$lib/images/imgplaceholder.png'
   import {page} from '$app/stores'
   import {goto} from '$app/navigation'
+  import {getComix} from '$lib/script.js'
   // {$page.params.section} to get the value of the url query
 
   let loadSection = async () => {
-    //let response = await fetch(`/api/read/${$page.params.comic}/${$page.params.section}`)
-    //let data = await response.json()
-    return;
+    let response = await getComix($page.params.comic, $page.params.section);
+    return response;
+    // object {
+    //  title: string,
+    //  author: string,
+    //  panels: [{
+    //    image: base64 string, #check stackoverflow
+    //    dialogue: string #separator is \n
+    //  }],
+    //  isLastPage: boolean
+    // }
   }
 </script>
 
@@ -15,25 +24,19 @@
   {#await loadSection()}
   <div aria-busy="true"></div>
   {:then section}
-    <div class="image_and_text">
-      <img src="{placeholder}" alt=""/>
-      <p>Shrek: It's time to end this! </p>
-    </div>
-
-    <div class="image_and_text flipped">
-      <img src="{placeholder}" alt=""/>
-      <p>Mario: Here I come!</p>
-    </div>
-
-    <div class="image_and_text">
-      <img src="{placeholder}" alt=""/>
-      <p>Shrek: You won't get away that easily!</p>
-    </div>
+    <h1>{section.title}</h1>
+    <h2>by {section.author}</h2>
+    {#each section.panels as panel}
+      <div class="image_and_text">
+        <img src="data:image/jpg;base64,${panel.image}" alt=""/>
+        <p>{panel.dialogue}</p>
+      </div>
+    {/each}
 
     <div class="pager">
       <button class="pager-button" disabled={$page.params.section <= 1} on:click={() => goto(`/read/${$page.params.comic}/${parseInt($page.params.section) - 1}`)}>&lt</button>
       {$page.params.section}
-      <button class="pager-button" on:click={() => goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`)}>&gt</button>
+      <button class="pager-button" disabled={section.isLastPage} on:click={() => goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`)}>&gt</button>
     </div>
   {/await}
 </div>
