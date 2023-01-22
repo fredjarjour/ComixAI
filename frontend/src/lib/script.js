@@ -2,6 +2,7 @@ async function parseCreateAnswer(answer, request) {
 	let title = '';
 	let descriptions = [];
 	let panels = [];
+	let panel_number = 1;
 	try {
 		let lines = answer.split('\n');
 		lines.forEach(async (line) => {
@@ -117,18 +118,16 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 	return comicID;
 }
 
-async function generateImage(promptString) {
+async function generateImage(prompt) {
 	let imgB64 = '';
 
     try {
-        const predictions = await fetch('.../predict', {
-            method: 'POST',
+        const predictions = await fetch('http://localhost:3000/stable-diffusion', {
             body: JSON.stringify({
-                prompt: promptString
+                prompt
             })
         });
-        const predictionsDict = await predictions.json();
-        imgB64 = predictionsDict.predictions[0];
+        imgB64 = await res.json();
     } catch (error) {
         console.error(error);
     }

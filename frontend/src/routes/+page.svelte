@@ -4,9 +4,9 @@
 	import {goto} from "$app/navigation";
 	let prompt = "";
 
-	const generate = () => {
-		generateComix(prompt);
-		goto(`/read/${prompt.split(' ').join('_')}/1`);
+	const generate = async () => {
+		let id = await generateComix(prompt);
+		goto(`/read/${id}/1`);
 	}
 
 	const loadSampleStories = async () => {
@@ -32,22 +32,21 @@
 	<button class="submit" on:click="{generate}" disabled={!prompt}>Generate</button>
 </div>
 
-<div class="text-container">
-	<p class="text">
-		Or read existing stories...
-	</p>
-	<p class="all text"><a href="/read">All stories</a></p>
-</div>
-<div class="stories">
-	{#await loadSampleStories()}
-		<div aria-busy="true"></div>
-	{:then stories}
+{#await loadSampleStories()}
+	<div aria-busy="true"></div>
+{:then stories}
+	<div class="text-container">
+		<p class="text">
+			Or read existing stories...
+		</p>
+		<p class="all text"><a href="/read">All stories</a></p>
+	</div>
+	<div class="stories">
 		{#each stories as story}
 			<StoryCover storyId={story._id} storyTitle={story.title} storyAuthor="Anonymous" imageSrc="data:image/jpg;base64,${story.panels[0].image}" />
 		{/each} 
-	{/await}
-
-</div>
+	</div>
+{/await}
 
 <style>
 
