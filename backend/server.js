@@ -88,8 +88,8 @@ app.get('/users', (req, res) => {
 // Create a new comic
 app.post('/comics', async (req, res) => {
   try {
-    console.log(req.body);
     const comic = new Comic(req.body);
+    console.log(comic);
     await comic.save();
     res.send(comic);
   } catch (err) {
@@ -156,7 +156,8 @@ app.post('/stable-diffusion', async (req, res) => {
 
   request(options, (error, response, body) => {
     if (error) throw new Error(error);
-    res.json(body);
+    const imageBuffer = Buffer.from(body, 'base64');
+    res.send(imageBuffer);
   });
 });
 
