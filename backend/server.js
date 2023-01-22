@@ -1,37 +1,39 @@
-const express = require('express')
-const cors = require('cors')
+const express = require('express');
+const cors = require('cors');
 const { Configuration, OpenAIApi } = require('openai');
 const mongoose = require('mongoose');
+const app = express();
 
 const User = require('./models/schemes').User;
 const Comic = require('./models/schemes').Comic;
+const Panel = require('./models/schemes').Panel;
 
-require('dotenv').config()
+require('dotenv').config();
 
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
+  organization: 'org-DrkO8FCiScMVM7ofmp3FvXvf',
+  apiKey: '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'
 });
 const openai = new OpenAIApi(configuration);
 
 const MONG_URI = 'mongodb+srv://comixai:conuhacks@comixai.qoef9rk.mongodb.net/?retryWrites=true&w=majority';
-  mongoose.connect(MONG_URI)
+mongoose.connect(MONG_URI)
   .then(() => {
-    router.listen(3000, () => console.log('connected to db & listening on port 3000'))
-    console.log('MongoDB Connected...')
+    app.listen(3000, () => console.log('connected to db & listening on port 3000'));
+    console.log('MongoDB Connected...');
   })
   .catch(err => console.log(err));
 
-const router = express()
-router.use(cors())
-router.use(express.json())
+app.use(cors())
+app.use(express.json())
 
-router.get('/', async (req, res) => {
+app.get('/', (req, res) => {
   res.status(200).send({
     message: 'Hello!'
   })
 })
 
-router.post('/prompt', async (req, res) => {
+app.post('/prompt', async (req, res) => {
   try {
     const prompt = req.body.prompt;
 
@@ -56,20 +58,19 @@ router.post('/prompt', async (req, res) => {
 })
 
 // Create a new user
-router.post('/users', (req, res) => {
-  const newUser = new User(req.body);
+app.post('/users', async (req, res) => {
+  const { username, email, password } = req.body;
 
-  newUser.save((err, user) => {
-    if (err) {
-      res.send(err);
-    } else {
-      res.json(user);
-    }
-  });
+  try {
+    const newUser = await User.create({ username, email, password });
+    res.status(200).send(newUser);
+  } catch(err) {
+    res.status
+  }
 });
 
 // Get all users
-router.get('/users', (req, res) => {
+app.get('/users', (req, res) => {
   User.find({}, (err, users) => {
     if (err) {
       res.send(err);
@@ -80,7 +81,7 @@ router.get('/users', (req, res) => {
 });
 
 // Create a new comic
-router.post('/comics', async (req, res) => {
+app.post('/comics', async (req, res) => {
   try {
     const comic = new Comic(req.body);
     await comic.save();
@@ -91,7 +92,7 @@ router.post('/comics', async (req, res) => {
 });
 
 // Get all comics
-router.get('/comics', (req, res) => {
+app.get('/comics', (req, res) => {
   Comic.find({})
     .populate('author')
     .exec((err, comics) => {
@@ -103,14 +104,14 @@ router.get('/comics', (req, res) => {
     });
 });
 
-// Add a new page to a comic
-router.post('/comics/:comicId/pages', (req, res) => {
+// Add a new panel to a comic
+app.post('/comics/:comicId/panels', (req, res) => {
   Comic.findById(req.params.comicId, (err, comic) => {
     if (err) {
       res.send(err);
     } else {
-      const newPage = new Page(req.body);
-      comic.pages.push(newPage);
+      const newPanel = new Panel(req.body);
+      comic.panels.push(newPanel);
       comic.save((err, updatedComic) => {
         if (err) {
           res.send(err);
@@ -123,7 +124,7 @@ router.post('/comics/:comicId/pages', (req, res) => {
 });
 
 // Get all pages of a comic
-router.get('/comics/:comicId/pages', (req, res) => {
+app.get('/comics/:comicId/pages', (req, res) => {
   Comic.findById(req.params.comicId)
     .select('pages')
     .exec((err, pages) => {
