@@ -39,7 +39,7 @@
 		<div aria-busy="true"></div>
 	{:then stories}
 		{#each stories as story}
-			<StoryCover storyId={story._id} storyTitle={story.title} storyAuthor={story.author.username} imageSrc="data:image/jpg;base64,${story.panels[0].image}" />
+			<StoryCover storyId={story._id} storyTitle={story.title} storyAuthor="Anonymous" imageSrc="data:image/jpg;base64,${story.panels[0].image}" />
 		{/each} 
 	{/await}
 
