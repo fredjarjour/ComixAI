@@ -6,6 +6,7 @@ from PIL import Image
 from stability_sdk import client
 import stability_sdk.interfaces.gooseai.generation.generation_pb2 as generation
 import base64
+import time
 
 # Host URL should not be prepended with "https" nor should it have a trailing slash.
 os.environ['STABILITY_HOST'] = 'grpc.stability.ai:443'
@@ -20,7 +21,7 @@ stability_api = client.StabilityInference(
     # stable-diffusion-512-v2-1 stable-diffusion-768-v2-1 stable-inpainting-v1-0 stable-inpainting-512-v2-0
 )
 
-if len(sys.argv) > 2:
+if len(sys.argv) <= 2:
     prompt = sys.argv[1]
 
     answers = stability_api.generate(
@@ -41,10 +42,11 @@ if len(sys.argv) > 2:
             if artifact.type == generation.ARTIFACT_IMAGE:
 
                 buff = io.BytesIO(artifact.binary)
-                img_str = base64.b64encode(buff.getvalue())
-                print(img_str)
+                img_str = base64.b64encode(buff.getvalue()).decode()
+                print("___________result:" + img_str)
+                time.sleep(0.1)
                 exit()
-    print("NULL")
+    print("___________result:NULL")
 else:
     prompt = sys.argv[1]
     img_str = sys.argv[2]
@@ -73,7 +75,8 @@ else:
             if artifact.type == generation.ARTIFACT_IMAGE:
                 buff = io.BytesIO(artifact.binary)
                 img_str = base64.b64encode(buff.getvalue())
-                print(img_str)
+                print("___________result:" + img_str)
+                time.sleep(0.1)
                 exit()
-    print("NULL")
+    print("___________result:NULL")
 
