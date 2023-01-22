@@ -1,6 +1,7 @@
 <script>
   import placeholder from '$lib/images/imgplaceholder.png'
   import {page} from '$app/stores'
+  import {goto} from '$app/navigation'
   // {$page.params.section} to get the value of the url query
 
   let loadSection = async () => {
@@ -28,13 +29,31 @@
       <img src="{placeholder}" alt=""/>
       <p>Shrek: You won't get away that easily!</p>
     </div>
+
+    <div class="pager">
+      <button class="pager-button" disabled={$page.params.section <= 1} on:click={() => goto(`/read/${$page.params.comic}/${parseInt($page.params.section) - 1}`)}>&lt</button>
+      {$page.params.section}
+      <button class="pager-button" on:click={() => goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`)}>&gt</button>
+    </div>
   {/await}
 </div>
 
 
-
-
 <style>
+  .pager {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .pager-button {
+    width:fit-content;
+  }
+
   .image_and_text {
     display: flex;
     align-items: center;
