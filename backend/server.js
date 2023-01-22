@@ -104,13 +104,17 @@ app.get('/comics', (req, res) => {
     });
 });
 
-// Add a new panel to a comic
+// Add new panels to a comic
 app.post('/comics/:comicId/panels', (req, res) => {
   Comic.findById(req.params.comicId, (err, comic) => {
     if (err) {
       res.send(err);
     } else {
-      const newPanel = new Panel(req.body);
+      const panels = (req.body);
+      panels.forEach(panel => {
+        const newPanel = new Panel(panel);
+        comic.panels.push(newPanel);
+      });
       comic.panels.push(newPanel);
       comic.save((err, updatedComic) => {
         if (err) {
@@ -123,15 +127,14 @@ app.post('/comics/:comicId/panels', (req, res) => {
   });
 });
 
-// Get all pages of a comic
-app.get('/comics/:comicId/pages', (req, res) => {
+/* app.get('/comics/:comicId/panels', (req, res) => {
   Comic.findById(req.params.comicId)
-    .select('pages')
-    .exec((err, pages) => {
+    .select('panels')
+    .exec((err, panels) => {
       if (err) {
         res.send(err);
       } else {
-        res.json(pages);
+        res.json(panels);
       }
     });
-});
+}); */
