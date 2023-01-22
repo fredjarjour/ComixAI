@@ -37,20 +37,21 @@ async function parseExistingAnswer(response, page_number) {
 	let panel_number = 1;
 	try {
 		let lines = response.split('\n');
-		lines.forEach(async (line) => {
+		console.log(lines);
+		for (const line of lines) {
 			if (line.startsWith('Panel ')) {
 				let panelDescription = line.split(': ').slice(1).join(': ');
+				let image = await generateImage(panelDescription);
 				panels.push({
-					page_number: page_number,
-					panel_number: panel_number,
-					image: await generateImage(panelDescription),
+					page_number,
+					panel_number: panel_number++,
+					image,
 					dialogue: []
 				});
-				panel_number++;
 			} else if (line.includes(': ')) {
 				panels[panels.length - 1].dialogue.push(line);
 			}
-		});
+		}
 		return panels;
 	} catch (err) {
 		console.log(err);
@@ -80,7 +81,6 @@ async function promptGPT(prompt) {
 }
 
 async function postToDatabase(comicTitle, character_descriptions, comicPanels, prompt) {
-	console.log(comicPanels[0].image);
 	let comicID = '';
 	try {
 		const res = await fetch('http://localhost:3000/comics', {
@@ -108,7 +108,7 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 					}
 				],
 				character_description: character_descriptions,
-				prompt: prompt
+				comic_prompt: prompt
 			}),
 			headers: { 'Content-Type': 'application/json' }
 		});
@@ -219,19 +219,22 @@ async function getPreviousPrompt(id) {
 	try {
 		const res = await fetch('http://localhost:3000/comics');
 		const comics = await res.json();
-		comic = comics.find((comic) => comic._id.str === id);
+		comic = comics.find((comic) => comic._id == id);
 	} catch (error) {
 		console.error(error);
+		return false;
 	}
 
-	prompt = comic.prompt;
+	console.log('COMIC PROMPT PREVIOUS: ' + JSON.stringify(comic, 'comic_prompt'));
 
-	return prompt;
+	return comic.comic_prompt;
 }
 
 async function createPage(id, page_number) {
 	let prompt = await getPreviousPrompt(id);
-	let callResponse = promptGPT(prompt + '\nContinue this story with three more panels.');
+	console.log('GPT PROMPTED WITH ' + prompt);
+	let callResponse = await promptGPT(prompt + '\nContinue this story with three more panels.');
+	console.log('NEW PROMPT' + callResponse);
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/prompt`, {
 			method: 'POST',
@@ -241,19 +244,21 @@ async function createPage(id, page_number) {
 		});
 	} catch (error) {
 		console.error(error);
+		return false;
 	}
 
-	let panels = parseExistingAnswer(callResponse, page_number + 1);
-
+	let panels = await parseExistingAnswer(callResponse, parseInt(page_number) + 1);
 	try {
 		await fetch(`http://localhost:3000/comics/${id}/panels`, {
 			method: 'POST',
-			body: JSON.stringify({
-				panels
-			})
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(panels)
 		});
 	} catch (error) {
 		console.error(error);
+		return false;
 	}
 }
 

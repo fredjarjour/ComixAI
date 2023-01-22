@@ -116,16 +116,16 @@ app.get('/comics', (req, res) => {
 
 // Add new panels to a comic
 app.post('/comics/:comicId/panels', (req, res) => {
-  Comic.findById(req.params.comicId, (err, comic) => {
+  Comic.findById(req.params.comicId, async (err, comic) => {
     if (err) {
       res.send(err);
     } else {
-      const panels = req.body;
+      let panels = req.body;
       panels.forEach((panel) => {
-        const newPanel = new Panel(panel);
+        console.log(panel);
+        let newPanel = new Panel(panel);
         comic.panels.push(newPanel);
       });
-      comic.panels.push(newPanel);
       comic.save((err, updatedComic) => {
         if (err) {
           res.send(err);
