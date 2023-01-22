@@ -1,6 +1,6 @@
 function parseCreateAnswer(answer, request) {
 	let title = '';
-	let author = 'Anonymous';
+    let author = "Anonymous";
 	let descriptions = [];
 	let panels = [];
 	try {
@@ -78,7 +78,7 @@ function postToDatabase(comicTitle, comicAuthor, character_descriptions, panels,
 		method: 'POST',
 		body: JSON.stringify({
 			title: comicTitle,
-			author: comicAuthor,
+            author: comicAuthor,
 			panels: [
 				{
 					page_number: 1,
@@ -173,7 +173,7 @@ function getComix(id, page) {
 		});
 
 	title = comic.title;
-	author = comic.author.username;
+	author = comic.author;
 
 	comic.panels.forEach((panel) => {
 		if (panel.page_number > maxPage) {
@@ -185,6 +185,20 @@ function getComix(id, page) {
 	});
 
 	return { title, author, panels, isLastPage: maxPage == page };
+}
+
+function getAllComix() {
+    let comics = [];
+    fetch('http://localhost:3000/comics')
+        .then((res) => res.json())
+        .then((comics) => {
+            comics = comics;
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+
+    return comics;
 }
 
 function getPreviousPrompt(id) {
@@ -225,4 +239,4 @@ function createPage(id, page_number) {
 
 
 
-export { generateComix, getComix, createPage };
+export { generateComix, getComix, createPage, getAllComix };
