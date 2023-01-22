@@ -1,12 +1,17 @@
 <script>
 	import StoryCover from "../components/StoryCover.svelte";
-	import {generateComix} from "$lib/script.js";
+	import {generateComix, getAllComix} from "$lib/script.js";
 	import {goto} from "$app/navigation";
 	let prompt = "";
 
 	const generate = () => {
 		generateComix(prompt);
 		goto(`/read/${prompt.split(' ').join('_')}/1`);
+	}
+
+	const loadSampleStories = async () => {
+		let comics = await getAllComix();
+		return comics.slice(0, 3);
 	}
 </script>
 
@@ -24,9 +29,14 @@
 	<p class="all text"><a href="/read">All stories</a></p>
 </div>
 <div class="stories">
-	<StoryCover story=1 />
-	<StoryCover story=1 />
-	<StoryCover story=1 />
+	{#await loadSampleStories()}
+		
+	{:then stories}
+		{#each stories as story}
+			<StoryCover storyId={story._id} storyTitle={story.title} storyAuthor={story.Author} imageSrc="data:image/jpg;base64,${story.panels[0].image}" />
+		{/each} 
+	{/await}
+
 </div>
 
 

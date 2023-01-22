@@ -1,13 +1,17 @@
 <script>
   import placeholder from '../lib/images/imgplaceholder.png'
   import {goto} from '$app/navigation';
-  export let story;
+  export let storyId;
+  export let storyTitle;
+  export let storyAuthor;
+  export let imageSrc;
 </script>
 
-<article class="container" on:click={() => goto(`/read/${story}/1`)}>
-  <img src="{placeholder}" alt="">
+<article class="container" on:click={() => goto(`/read/${storyId}/1`)}>
+  <img src="{image}" alt="">
   <div class="title">
-    <p>Story Title</p>
+    <p>{storyTitle}</p>
+    <p>{storyAuthor}</p>
   </div>
 </article>
 

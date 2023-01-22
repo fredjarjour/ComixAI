@@ -20,7 +20,7 @@
   }
 
   let generateNewPage = async () => {
-    await createPage($page.params.comic);
+    await createPage($page.params.comic, $page.params.section);
     goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`);
   }
 </script>
