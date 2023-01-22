@@ -24,7 +24,7 @@ const User = mongoose.model('User', userSchema);
 const comicSchema = new mongoose.Schema({
   title: { type: String, required: true },
   author: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  panels: panelSchema,
+  panels: [panelSchema],
   created_at: { type: Date, default: Date.now },
   character_description: [{ type: String }]
 });
