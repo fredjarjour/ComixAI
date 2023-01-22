@@ -4,7 +4,11 @@
 	import Header from '../components/Header.svelte';
 </script>
 
-<Header />
+<svelte:head>
+  <!-- <link href="https://fonts.googleapis.com/css?family=Bangers" rel="stylesheet"> -->
+</svelte:head>
+
+
 <div class="container">
   <slot />
 </div>
