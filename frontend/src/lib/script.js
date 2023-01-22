@@ -122,12 +122,16 @@ async function generateImage(prompt) {
 	let imgB64 = '';
 
     try {
-        const predictions = await fetch('http://localhost:3000/stable-diffusion', {
-            body: JSON.stringify({
-                prompt
-            })
-        });
-        imgB64 = await res.json();
+        const response = await fetch('http://localhost:3000/stable-diffusion', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({
+				prompt
+			})
+		});
+		imgB64 = response.text();
     } catch (error) {
         console.error(error);
     }
