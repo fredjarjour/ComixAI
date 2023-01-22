@@ -2,19 +2,20 @@ async function parseCreateAnswer(answer, request) {
 	let title = '';
 	let descriptions = [];
 	let panels = [];
+	
 	let panel_number = 1;
 	try {
 		let lines = answer.split('\n');
-		lines.forEach(async (line) => {
+		for (const line of lines) {
 			if (line.startsWith('Panel ')) {
 				let panelDescription = line.split(': ').slice(1).join(': ');
-                panels.push({
-					page_number: page_number,
-					panel_number: panel_number,
-					image: await generateImage(panelDescription),
+				let image = await generateImage(panelDescription);
+				panels.push({
+					page_number: 1,
+					panel_number: panel_number++,
+					image,
 					dialogue: []
 				});
-				panel_number++;
 			} else if (line.startsWith('DESCRIPTION: ')) {
 				descriptions.push(line.substring(13));
 			} else if (line.startsWith('TITLE: ')) {
@@ -22,7 +23,7 @@ async function parseCreateAnswer(answer, request) {
 			} else if (line.includes(': ')) {
 				panels[panels.length - 1].dialogue.push(line);
 			}
-		});
+		}
 		let id = await postToDatabase(title, descriptions, panels, request + '\n' + answer);
 		return id;
 	} catch (err) {
@@ -59,6 +60,7 @@ async function parseExistingAnswer(response, page_number) {
 
 async function promptGPT(prompt) {
 	let callResponse = '';
+	
 	try {
 		const response = await fetch('http://localhost:3000/prompt', {
 			method: 'POST',
@@ -78,6 +80,7 @@ async function promptGPT(prompt) {
 }
 
 async function postToDatabase(comicTitle, character_descriptions, comicPanels, prompt) {
+	console.log(comicPanels);
 	let comicID = '';
 	try {
 		const res = await fetch('http://localhost:3000/comics', {
@@ -88,20 +91,20 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 					{
 						page_number: 1,
 						panel_number: 1,
-						image: comicPanels[0][0],
-						dialogue: comicPanels[0][1]
+						dialogue: comicPanels[0].dialogue,
+						image: comicPanels[0].image						
 					},
 					{
 						page_number: 1,
 						panel_number: 2,
-						image: comicPanels[1][0],
-						dialogue: comicPanels[1][1]
+						dialogue: comicPanels[1].dialogue,
+						image: comicPanels[1].image						
 					},
 					{
 						page_number: 1,
 						panel_number: 3,
-						image: comicPanels[2][0],
-						dialogue: comicPanels[2][1]
+						dialogue: comicPanels[2].dialogue,
+						image: comicPanels[2].image						
 					}
 				],
 				character_description: character_descriptions,
@@ -110,8 +113,7 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 			headers: { 'Content-Type': 'application/json' }
 		});
 		const comic = await res.json();
-		console.log(comic);
-		comicID = comic._id.str;
+		comicID = comic._id;
 	} catch (err) {
 		console.error(err);
 	}
@@ -120,7 +122,7 @@ async function postToDatabase(comicTitle, character_descriptions, comicPanels, p
 
 async function generateImage(prompt) {
 	let imgB64 = '';
-
+	console.log(prompt);
     try {
         const response = await fetch('http://localhost:3000/stable-diffusion', {
 			method: 'POST',
@@ -134,6 +136,7 @@ async function generateImage(prompt) {
 		imgB64 = response.text();
     } catch (error) {
         console.error(error);
+		return false;
     }
 
 	return imgB64;
@@ -155,6 +158,7 @@ async function generateComix(prompt) {
 	let callResponse = await promptGPT(request + tempRequest + end);
 
 	let id = await parseCreateAnswer(callResponse, request + end);
+	console.log("ID: " + id);
 	if (!id) {
 		console.error('Error parsing answer');
 		return false;
@@ -172,12 +176,11 @@ async function getComix(id, page) {
 	try {
 		const res = await fetch('http://localhost:3000/comics');
 		const comics = await res.json();
-		comic = comics.find((comic) => comic._id === id);
+		comic = comics.find((comic) => comic._id == id);
 	} catch (error) {
 		console.error(error);
 		return false;
 	}
-
 	title = comic.title;
 	author = comic.author;
 
@@ -254,6 +257,3 @@ async function createPage(id, page_number) {
 }
 
 export { generateComix, getComix, createPage, getAllComix };
-
-
-console.log(await generateImage("a dog"));
