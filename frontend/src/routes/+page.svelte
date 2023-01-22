@@ -86,6 +86,7 @@
 		align-items: center;
 		color: #777;
 		margin-bottom: 20px;
+		text-align: center;
 	}
 
 	.text {
