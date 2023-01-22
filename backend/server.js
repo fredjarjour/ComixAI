@@ -142,8 +142,8 @@ app.post('/comics/:comicId/prompt', async (req, res) => {
     }
 });
 
-app.get("/stable-diffusion", async (req, res) => {
-  const prompt = req.body;
+app.post("/stable-diffusion", async (req, res) => {
+  const prompt = req.body.prompt;
   try {
       const result = await stableDiffusion(prompt);
       res.send(result);
