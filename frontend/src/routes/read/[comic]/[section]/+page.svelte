@@ -30,8 +30,8 @@
 <div aria-busy="true"></div>
 {:then section}
 <div class="container">
-    <h1>{section.title}</h1>
-    <h2>by {section.author}</h2>
+    <!-- <h2>{section.title}</h2> -->
+    <!-- <h4>by {section.author}</h4> -->
     {#each section.panels as panel} 
       <div class="image_and_text">
         <img src="data:image/png;base64,{panel.image.substring(1,panel.image.length - 1)}" alt=""/>

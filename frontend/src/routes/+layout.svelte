@@ -9,8 +9,8 @@
 </svelte:head>
 
 <div style="display: flex; flex-direction: row-reverse; margin-right: 0; margin-left: auto; margin-top: 15px;">
-	<a href="signup" role="button" class="secondary" style="margin-right: 15px;">Sign Up</a>
-	<a href="login" role="button" class="contrast" style="margin-right: 15px;">Log In</a>
+	<a href="signup" role="button" class="secondary" style="margin-right: 160px;margin-top:50px">Sign Up</a>
+	<a href="login" role="button" class="contrast" style="margin-right: 30px;margin-top:50px">Log In</a>
 </div>
 
 <div class="container">
