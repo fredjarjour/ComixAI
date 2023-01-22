@@ -18,6 +18,13 @@
     //  isLastPage: boolean
     // }
   }
+
+  let generateNewPage = async () => {
+    let response = await getComix($page.params.comic, parseInt($page.params.section) + 1);
+    if (response.isLastPage) {
+      goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`)
+    }
+  }
 </script>
 
 <div>
@@ -37,12 +44,17 @@
       <button class="pager-button" disabled={$page.params.section <= 1} on:click={() => goto(`/read/${$page.params.comic}/${parseInt($page.params.section) - 1}`)}>&lt</button>
       {$page.params.section}
       <button class="pager-button" disabled={section.isLastPage} on:click={() => goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`)}>&gt</button>
+      <button class="pager-button" on:click={generateNewPage} class:hidden="{!section.isLastPage}">Generate Next Page</button>
     </div>
   {/await}
 </div>
 
 
 <style>
+  .hidden {
+    display: none;
+  }
+
   .pager {
     display: flex;
     flex-direction: row;

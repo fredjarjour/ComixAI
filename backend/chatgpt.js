@@ -12,10 +12,7 @@ async function generateComicPrompt() {
     try {
         const prompt = 
         `
-        Write a comic about Shrek fighting Mario. Include a separate description of what the corresponding panel would look like. Follow this format:
-        Panel: [Visual description of panel]
-        [Name of character]: [Dialogue spoken by character]
-        Generate three panels at a time
+        Write a comic about Shrek fighting Mario. Include a separate description of what the corresponding panel would look like. Follow this format: Panel: [Visual description of panel]; [Name of character]: [Dialogue spoken by character]; Generate three panels at a time
         `
 
         const response = await openai.createCompletion({
