@@ -25,10 +25,11 @@
   }
 </script>
 
-<div>
-  {#await loadSection()}
-  <div aria-busy="true"></div>
-  {:then section}
+
+{#await loadSection()}
+<div aria-busy="true"></div>
+{:then section}
+<div class="container">
     <h1>{section.title}</h1>
     <h2>by {section.author}</h2>
     {#each section.panels as panel}
@@ -45,14 +46,23 @@
       <button class="pager-button" disabled={section.isLastPage} on:click={() => goto(`/read/${$page.params.comic}/${parseInt($page.params.section) + 1}`)}>&gt</button>
       <button class="pager-button" on:click={generateNewPage} class:hidden="{!section.isLastPage}">Generate Next Page</button>
     </div>
+</div>
   {:catch error}
     {console.log(error)}
     <p>{error.message}</p>
   {/await}
-</div>
-
 
 <style>
+  @keyframes pop-into-existence {
+		0% {
+			transform: scale(0);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+
   .hidden {
     display: none;
   }
@@ -80,6 +90,10 @@
 
   .flipped {
     flex-direction: row-reverse;  
+  }
+
+  .container {
+    animation: pop-into-existence 1s;
   }
 
   img {
