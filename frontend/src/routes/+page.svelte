@@ -73,7 +73,8 @@
 		align-items: center;
 		gap: 0.5rem;
 		margin-top: 20px;
-		width: 100%
+		width: 100%;
+		animation: pop-into-existence 1s;
 	}
 
 	.description {
