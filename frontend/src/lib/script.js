@@ -176,7 +176,7 @@ async function getComix(id, page) {
 		if (panel.page_number > maxPage) {
 			maxPage = panel.page_number;
 		}
-		if (panel.page_number === page) {
+		if (panel.page_number == page) {
 			panels[panel.panel_number - 1] = {
 				image: Buffer.from(panel.image).toString('base64'),
 				dialogue: panel.dialogue.join('\n')
