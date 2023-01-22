@@ -3,8 +3,10 @@
 	import {generateComix, getAllComix} from "$lib/script.js";
 	import {goto} from "$app/navigation";
 	let prompt = "";
+	let loading = false;
 
 	const generate = async () => {
+		loading = true;
 		let id = await generateComix(prompt);
 		goto(`/read/${id}/1`);
 	}
@@ -18,6 +20,10 @@
 <svelte:head>
     <title>ComixAI</title> 
 </svelte:head>
+
+<div class="loading" class:hidden="{!loading}">
+	<span class="loader"></span>
+</div>
 
 <h1 class="title anim-typewriter">ComixAI</h1>
 
@@ -49,6 +55,56 @@
 {/await}
 
 <style>
+	.loader {
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  animation: pulse 1s linear infinite;
+}
+.loader:after {
+  content: '';
+  position: absolute;
+  width: 48px;
+  height: 48px;
+  border: 5px solid #FFF;
+  border-radius: 50%;
+  display: inline-block;
+  box-sizing: border-box;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  animation: scaleUp 1s linear infinite;
+}
+
+@keyframes scaleUp {
+  0% { transform: translate(-50%, -50%) scale(0) }
+  60% , 100% { transform: translate(-50%, -50%)  scale(1)}
+}
+@keyframes pulse {
+  0% , 60% , 100%{ transform:  scale(1) }
+  80% { transform:  scale(1.2)}
+}
+	.hidden {
+		display: none !important;
+	}
+
+	.loading {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		font-size: 2rem;
+		background-color: #777;
+		opacity: 0.5;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 
 	@keyframes slide-up {
 		0% {
