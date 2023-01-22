@@ -24,14 +24,35 @@
 	<p class="all text"><a href="/read">All stories</a></p>
 </div>
 <div class="stories">
-	<StoryCover story=1/>
-	<StoryCover story=1/>
-	<StoryCover story=1/>
+	<StoryCover story=1 />
+	<StoryCover story=1 />
+	<StoryCover story=1 />
 </div>
 
 
 
 <style>
+
+	@keyframes slide-up {
+		0% {
+			transform: translateY(100%);
+			opacity: 0;
+		}
+		100% {
+			transform: translateY(0%);
+			opacity: 100;
+		}
+	}
+
+	@keyframes pop-into-existence {
+		0% {
+			transform: scale(0);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
 	.text-container {
 		display: flex;
 		flex-direction: row;
@@ -55,6 +76,7 @@
 		flex-direction: row;
 		align-items: center;
 		gap: 0.5rem;
+		animation: slide-up 1s;
 	}
 
 	#prompt {
@@ -68,6 +90,7 @@
 	.stories {
 		display: flex;
 		gap: 5rem;
+		animation: pop-into-existence 1s;
 	}
 
 	.all {
