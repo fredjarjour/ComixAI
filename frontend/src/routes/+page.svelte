@@ -68,7 +68,8 @@
 		flex-direction: row;
 		align-items: center;
 		gap: 0.5rem;
-		width: 100%
+		width: 100%;
+		animation: pop-into-existence 1s;
 	}
 
 	.text {
