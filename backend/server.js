@@ -23,7 +23,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const MONG_URI =
-  'mongodb+srv://comixai:conuhacks@comixai.qoef9rk.mongodb.net/?retryWrites=true&w=majority';
+  'mongodb+srv://comixai:conuhacks@comixxai.qhgbxub.mongodb.net/?retryWrites=true&w=majority';
 mongoose
   .connect(MONG_URI)
   .then(() => {
