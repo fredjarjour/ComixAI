@@ -134,7 +134,7 @@ app.post('/comics/:comicId/prompt', async (req, res) => {
       const comic = await Comic.findById(req.params.comicId);
       comic.comic_prompt = req.body.new_prompt;
       await comic.save();
-      res.json({ message: 'Prompt sccessfully concatenated!' + comic.comic_prompt });
+      res.json({ message: 'Prompt successfully concatenated!: ' + comic.comic_prompt });
     } catch (err) {
       res.status(500).json({ message: err.message });
     }
